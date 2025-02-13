@@ -19,8 +19,8 @@ def create_cron_job(course, day, min_time, max_time, players):
     # Build the cron job timing (0 7 <day> <month> *)
     cron_timing = f"{cron_minute} {cron_hour} {cron_day} {cron_month} *"
 
-    # Build the cron command
-    cron_command = f"python3 /path/to/bookTeeTimes.py {course} {day} {min_time} {max_time} {players}"
+    # Ensure course, day, min_time, max_time, and players are wrapped in quotes
+    cron_command = f"python3 /home/teetimesuser/bookTeeTimes/bookTeeTimes.py \"{course}\" \"{day}\" \"{min_time}\" \"{max_time}\" \"{players}\""
 
     # Full cron job entry
     cron_job = f"{cron_timing} {cron_command}"
