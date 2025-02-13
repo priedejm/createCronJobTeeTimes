@@ -20,7 +20,6 @@ def create_cron_job(course, day, min_time, max_time, players):
     cron_timing = f"{cron_minute} {cron_hour} {cron_day} {cron_month} *"
 
     # Ensure course, day, min_time, max_time, and players are wrapped in quotes
-    # Use single quotes for the cron job and double quotes inside
     cron_command = f"python3 /home/teetimesuser/bookTeeTimes/bookTeeTimes.py '{course}' '{day}' '{min_time}' '{max_time}' '{players}'"
 
     # Full cron job entry
@@ -39,14 +38,16 @@ def create_cron_job(course, day, min_time, max_time, players):
         # If there are no existing cron jobs (crontab -l fails), we simply continue
         existing_cron_jobs = ""
 
-    # Add the new cron job to the crontab using echo and crontab
+    # Create a temporary crontab file with the existing cron jobs + new cron job
+    temp_crontab_file = "/tmp/temp_crontab"
+    with open(temp_crontab_file, "w") as f:
+        # Write existing cron jobs and the new cron job
+        f.write(existing_cron_jobs)
+        f.write(f"{cron_job}\n")  # Append the new cron job
+
+    # Update the crontab with the temporary file
     try:
-        # Append the cron job to the current list of cron jobs and update crontab
-        subprocess.run(
-            f"(echo '{existing_cron_jobs}' ; echo '{cron_job}') | crontab -",
-            shell=True,
-            check=True
-        )
+        subprocess.run(["crontab", temp_crontab_file], check=True)
         print(f"Cron job created successfully:\n{cron_job}")
     except subprocess.CalledProcessError as e:
         print(f"Error creating cron job: {e}")
