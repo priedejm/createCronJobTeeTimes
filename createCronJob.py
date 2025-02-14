@@ -13,8 +13,8 @@ def create_cron_job(course, day, min_time, max_time, players):
     # Extract the day, month, and year
     cron_day = day_obj.day
     cron_month = day_obj.month
-    cron_hour = 7  # Fixed to 7:00 AM
-    cron_minute = 0  # Fixed to 0 minute
+    cron_hour = 6  # Fixed to 7:00 AM
+    cron_minute = 59  # Fixed to 0 minute
 
     # Build the cron job timing (0 7 <day> <month> *)
     cron_timing = f"{cron_minute} {cron_hour} {cron_day} {cron_month} *"
