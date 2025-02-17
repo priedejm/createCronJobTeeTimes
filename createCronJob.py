@@ -2,7 +2,7 @@ import sys
 import subprocess
 from datetime import datetime
 
-def create_cron_job(course, day, min_time, max_time, players):
+def create_cron_job(course, day, min_time, max_time, players, numOfTeeTimes):
     # Parse the day parameter (expected format: YYYY-MM-DD)
     try:
         day_obj = datetime.strptime(day, "%Y-%m-%d")
@@ -20,7 +20,7 @@ def create_cron_job(course, day, min_time, max_time, players):
     cron_timing = f"{cron_minute} {cron_hour} {cron_day} {cron_month} *"
 
     # Ensure course, day, min_time, max_time, and players are wrapped in quotes
-    cron_command = f"python3 /home/teetimesuser/bookTeeTimes/bookTeeTimes.py '{course}' '{day}' '{min_time}' '{max_time}' '{players}' '1'"
+    cron_command = f"python3 /home/teetimesuser/bookTeeTimes/bookTeeTimes.py '{course}' '{day}' '{min_time}' '{max_time}' '{players}' '{numOfTeeTimes}'"
 
     # Full cron job entry
     cron_job = f"{cron_timing} {cron_command}"
@@ -55,8 +55,8 @@ def create_cron_job(course, day, min_time, max_time, players):
 def main():
     # Check if the required number of arguments is provided
     print("lenght of", len(sys.argv), sys.argv)
-    if len(sys.argv) != 6:
-        print("Usage: python createCronJob.py <course> <day> <minTime> <maxTime> <players>")
+    if len(sys.argv) != 7:
+        print("Usage: python createCronJob.py <course> <day> <minTime> <maxTime> <players> <numOfTeeTimes>")
         sys.exit(1)
 
     # Get parameters from the command line
@@ -65,9 +65,10 @@ def main():
     min_time = sys.argv[3]
     max_time = sys.argv[4]
     players = sys.argv[5]
+    numOfTeeTimes = sys.argv[6]
 
     # Create the cron job
-    create_cron_job(course, day, min_time, max_time, players)
+    create_cron_job(course, day, min_time, max_time, players, numOfTeeTimes)
 
 if __name__ == "__main__":
     main()
