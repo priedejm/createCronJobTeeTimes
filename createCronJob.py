@@ -54,6 +54,7 @@ def create_cron_job(course, day, min_time, max_time, players):
 
 def main():
     # Check if the required number of arguments is provided
+    print("lenght of", len(sys.argv), sys.argv)
     if len(sys.argv) != 6:
         print("Usage: python createCronJob.py <course> <day> <minTime> <maxTime> <players>")
         sys.exit(1)
