@@ -9,17 +9,28 @@ def create_cron_job(course, day, min_time, max_time, players, numOfTeeTimes):
         print("Invalid date format. Please use YYYY-MM-DD format.")
         return
 
-    # Find the earliest valid cron day (7 days before, or the closest valid one)
+    # Get today's date and time
     today = datetime.today()
-    for days_prior in range(7, 0, -1):
-        potential_run_day = day_obj - timedelta(days=days_prior)
-        if potential_run_day >= today:
-            cron_day = potential_run_day.day
-            cron_month = potential_run_day.month
-            break
+
+    # Define the target run time (6:59 AM on the day)
+    target_time = today.replace(hour=6, minute=59, second=0, microsecond=0)
+
+    # If the current time is before 6:59 AM, we can still schedule the cron job for the day
+    if today < target_time:
+        cron_day = today.day
+        cron_month = today.month
     else:
-        print("No valid prior day found for scheduling the cron job.")
-        return
+        # Find the earliest valid cron day (7 days before, or the closest valid one)
+        for days_prior in range(7, 0, -1):
+            potential_run_day = day_obj - timedelta(days=days_prior)
+            target_time = potential_run_day.replace(hour=6, minute=59, second=0, microsecond=0)
+            if potential_run_day >= today or today < target_time:
+                cron_day = potential_run_day.day
+                cron_month = potential_run_day.month
+                break
+        else:
+            print("No valid prior day found for scheduling the cron job.")
+            return
 
     cron_hour = 6  # Fixed to 6:59 AM
     cron_minute = 59  
