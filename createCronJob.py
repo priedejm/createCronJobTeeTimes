@@ -36,8 +36,15 @@ def create_cron_job(course, day, min_time, max_time, players, numOfTeeTimes):
     cron_minute = 59  
 
     cron_timing = f"{cron_minute} {cron_hour} {cron_day} {cron_month} *"
-    cron_command = f"python3 /home/teetimesuser/bookTeeTimes/bookTeeTimes.py '{course}' '{day}' '{min_time}' '{max_time}' '{players}' '{numOfTeeTimes}'"
-    cron_job = f"{cron_timing} {cron_command}"
+
+    # Path to your script and log file
+    script_path = "/home/teetimesuser/bookTeeTimes/bookTeeTimes.py"
+    log_file_path = "/home/teetimesuser/cron_logs/bookTeeTimes.log"
+
+    cron_command = f"python3 {script_path} '{course}' '{day}' '{min_time}' '{max_time}' '{players}' '{numOfTeeTimes}'"
+    
+    # Redirect both stdout and stderr to the log file
+    cron_job = f"{cron_timing} {cron_command} >> {log_file_path} 2>&1"
 
     try:
         result = subprocess.run(
@@ -62,7 +69,7 @@ def create_cron_job(course, day, min_time, max_time, players, numOfTeeTimes):
         print(f"Error creating cron job: {e}")
 
 def main():
-    print("Arguments:", sys.argv)
+    print("Arguments: " + str(sys.argv))
     if len(sys.argv) != 7:
         print("Usage: python createCronJob.py <course> <day> <minTime> <maxTime> <players> <numOfTeeTimes>")
         sys.exit(1)
