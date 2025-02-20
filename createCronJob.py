@@ -2,7 +2,7 @@ import sys
 import subprocess
 from datetime import datetime, timedelta
 
-def create_cron_job(course, day, min_time, max_time, players, numOfTeeTimes):
+def create_cron_job(course, day, min_time, max_time, players, numOfTeeTimes, user):
     try:
         day_obj = datetime.strptime(day, "%Y-%m-%d")
     except ValueError:
@@ -41,7 +41,7 @@ def create_cron_job(course, day, min_time, max_time, players, numOfTeeTimes):
     script_path = "/home/teetimesuser/bookTeeTimes/bookTeeTimes.py"
     log_file_path = "/home/teetimesuser/cron_logs/bookTeeTimes.log"
 
-    cron_command = f"python3 {script_path} '{course}' '{day}' '{min_time}' '{max_time}' '{players}' '{numOfTeeTimes}'"
+    cron_command = f"python3 {script_path} '{course}' '{day}' '{min_time}' '{max_time}' '{players}' '{numOfTeeTimes}' '{user}'"
     
     # Redirect both stdout and stderr to the log file
     cron_job = f"{cron_timing} {cron_command} >> {log_file_path} 2>&1"
@@ -70,8 +70,8 @@ def create_cron_job(course, day, min_time, max_time, players, numOfTeeTimes):
 
 def main():
     print("Arguments: " + str(sys.argv))
-    if len(sys.argv) != 7:
-        print("Usage: python createCronJob.py <course> <day> <minTime> <maxTime> <players> <numOfTeeTimes>")
+    if len(sys.argv) != 8:
+        print("Usage: python createCronJob.py <course> <day> <minTime> <maxTime> <players> <numOfTeeTimes> <user>")
         sys.exit(1)
 
     course = sys.argv[1]
@@ -80,8 +80,9 @@ def main():
     max_time = sys.argv[4]
     players = sys.argv[5]
     numOfTeeTimes = sys.argv[6]
+    user = sys.argv[7]
 
-    create_cron_job(course, day, min_time, max_time, players, numOfTeeTimes)
+    create_cron_job(course, day, min_time, max_time, players, numOfTeeTimes, user)
 
 if __name__ == "__main__":
     main()
